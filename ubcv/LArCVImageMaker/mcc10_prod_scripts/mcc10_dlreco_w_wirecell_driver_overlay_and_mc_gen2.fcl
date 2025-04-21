@@ -1,6 +1,7 @@
 #include "dlprod_fclbase_producers.fcl"
 #include "dlprod_fclbase_analyzers_gen2.fcl"
 #include "time_memory_tracker_microboone.fcl"
+#include "reco_uboone_data_mcc9_10.fcl"
 
 BEGIN_PROLOG
 
@@ -23,6 +24,7 @@ services:
   scheduler:    { defaultExceptions: false }
   #TimeTracker:             @local::microboone_time_tracker
   MemoryTracker:           @local::microboone_memory_tracker
+  RandomNumberGenerator:   {} #ART native random number generator
   message:                 @local::microboone_message_services_prod_debug
   FileCatalogMetadata:     @local::art_file_catalog_data
   @table::microboone_services_reco
@@ -66,6 +68,7 @@ physics:
 {
  producers: {
    @table::dlprod_producers
+   @table::microboone_reco_data_producers
    #ubdl: @local::microboone_ubdl
  }
 
@@ -75,6 +78,9 @@ physics:
    @table::dlprod_analyzers
    wctagger: @local::litedata_wctagger
  }
+
+ reco: [ "rns", "wcopflash","crtt0Correction","crthitcorrFirstPass","crthitcorr","crttzero","crttrack" ]
+ trigger_paths: [ reco]
 
  #dlnetpath: [ubdl]
  #stream: [opreco, reco2d, mcinfo, gaushitMCinfoBacktracker, wctagger, superaMCTruthOnly, out1]
@@ -125,6 +131,7 @@ outputs:
    compressionLevel: 1
    saveMemoryObjectThreshold: 0
    fileName:    "%ifb_%tc_ubdl.root" #default file name, can override from command line with -o or --output
+   outputCommands: ["keep *_*_*_*", "drop *_*_*_DLDeploy"]
  }
 }
 

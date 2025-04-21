@@ -3,7 +3,7 @@
 #include "microboone_crt_file_manager.fcl"
 #include "microboone_crt_merger.fcl"
 #include "crtflashana.fcl"
-#include "reco_uboone_data_mcc9_8.fcl"
+#include "reco_uboone_data_mcc9_10.fcl"
 ##include "microboone_ubdl_module.fcl"
 #include "time_memory_tracker_microboone.fcl"
 
@@ -107,6 +107,9 @@ physics:
    wctagger: @local::litedata_wctagger
  }
  
+ reco: [ "rns", "wcopflash","crtt0Correction","crthitcorrFirstPass","crthitcorr","crttzero","crttrack" ]
+ trigger_paths: [ reco]
+
  #dlnetpath: [ophitBeamCalib,ophitCosmicCalib,simpleFlashBeam,simpleFlashCosmic,merger,mergerextra,crthitcorr,crttzero,crttrack,ubdl]
  #stream: [opreco, reco2d, wctagger, out1]
  stream: [opreco, superaData, out1]
@@ -163,6 +166,7 @@ outputs:
    compressionLevel: 1
    saveMemoryObjectThreshold: 0
    fileName:    "%ifb_%tc_ubdl.root" #default file name, can override from command line with -o or --output
+   outputCommands: ["keep *_*_*_*", "drop *_*_*_DLWCDeploy"]
  }
 }
 
